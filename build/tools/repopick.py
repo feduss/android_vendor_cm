@@ -364,8 +364,14 @@ if __name__ == '__main__':
             print('WARNING: Skipping {0} since there is no project directory for: {1}\n'.format(item['id'], item['project']))
             continue
         else:
-            sys.stderr.write('ERROR: For {0}, could not determine the project path for project {1}\n'.format(item['id'], item['project']))
-            sys.exit(1)
+            oldItemProject = item['project']
+            item['project']  = item['project'].replace("LineageOS", "feduss") + "-spyder"
+            print('Item project {0} replaced with {1}'.format(oldItemProject, item['project']))
+            if item['project'] in project_name_to_data and item['branch'] in project_name_to_data[item['project']]:
+                project_path = project_name_to_data[item['project']][item['branch']]
+            else:
+                sys.stderr.write('ERROR: For {0}, could not determine the project path for project {1}\n'.format(item['id'], item['project']))
+                sys.exit(1)
 
         # If --start-branch is given, create the branch (more than once per path is okay; repo ignores gracefully)
         if args.start_branch:
